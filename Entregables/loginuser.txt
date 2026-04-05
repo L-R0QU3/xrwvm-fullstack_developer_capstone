@@ -1,0 +1,21 @@
+C:\fullstack_project> Invoke-WebRequest -Uri "http://127.0.0.1:8000/djangoapp/login" -Method POST -ContentType "application/json" -Body $body -UseBasicParsing
+
+
+StatusCode        : 200
+StatusDescription : OK
+Content           : {"userName": "roque2", "status": "Authenticated"}
+RawContent        : HTTP/1.1 200 OK
+                    X-Frame-Options: DENY
+                    Vary: Cookie
+                    X-Content-Type-Options: nosniff
+                    Referrer-Policy: same-origin
+                    Cross-Origin-Opener-Policy: same-origin
+                    Content-Length: 49
+                    Content-Type: applicat...
+Forms             : 
+Headers           : {[X-Frame-Options, DENY], [Vary, Cookie], [X-Content-Type-Options, nosniff], [Referrer-Policy, same-origin]...}
+Images            : {}
+InputFields       : {}
+Links             : {}
+ParsedHtml        : 
+RawContentLength  : 49

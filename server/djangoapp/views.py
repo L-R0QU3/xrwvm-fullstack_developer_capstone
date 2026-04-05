@@ -13,6 +13,7 @@ from django.contrib.auth import login, authenticate
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import logout
 # from .populate import initiate
 
 
@@ -38,14 +39,39 @@ def login_user(request):
         data = {"userName": username, "status": "Authenticated"}
     return JsonResponse(data)
 
-# Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+@csrf_exempt
+def logout_user(request):
+    logout(request)
+    return JsonResponse({"userName": ""})
 
-# Create a `registration` view to handle sign up request
-# @csrf_exempt
-# def registration(request):
-# ...
+@csrf_exempt
+def registration(request):
+    try:
+        data = json.loads(request.body)
+        username = data['userName']
+        password = data['password']
+        first_name = data['firstName']
+        last_name = data['lastName']
+        email = data['email']
+        
+        # Verificar si el usuario ya existe
+        from django.contrib.auth.models import User
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({"userName": username, "error": "Already Registered"})
+        
+        # Crear nuevo usuario
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email,
+            first_name=first_name,
+            last_name=last_name
+        )
+        # Iniciar sesión automáticamente después del registro
+        login(request, user)
+        return JsonResponse({"userName": username, "status": "Authenticated"})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
 
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
