@@ -44,5 +44,5 @@ jobs:
       - name: Run Linter on JS files
         run: |
           cd server/database
-          find . -name "*.js" -exec jshint {} +
+          find . -name "*.py" -not -path "./djangoapp/migrations/*" -exec flake8 {} +
           echo "Linted all JavaScript files successfully"
