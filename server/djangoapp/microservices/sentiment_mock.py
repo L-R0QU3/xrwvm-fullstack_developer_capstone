@@ -1,10 +1,12 @@
 from flask import Flask
 from nltk.sentiment import SentimentIntensityAnalyzer
 import nltk
+
 nltk.download('vader_lexicon')
 
 app = Flask(__name__)
 sia = SentimentIntensityAnalyzer()
+
 
 @app.route('/analyze/<text>')
 def analyze(text):
@@ -17,6 +19,7 @@ def analyze(text):
     else:
         sentiment = 'neutral'
     return {'sentiment': sentiment}
+
 
 if __name__ == '__main__':
     app.run(port=5000)

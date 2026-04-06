@@ -1,11 +1,10 @@
 import requests
-import json
-from django.conf import settings
 import os
 
 # Obtener URLs desde variables de entorno (definidas en .env)
 backend_url = os.getenv('backend_url', 'http://localhost:5000/')
 sentiment_analyzer_url = os.getenv('sentiment_analyzer_url', 'http://localhost:5000/')
+
 
 def get_request(endpoint, **kwargs):
     """
@@ -27,6 +26,7 @@ def get_request(endpoint, **kwargs):
         print(f"Network exception occurred: {e}")
         return None
 
+
 def post_review(data_dict):
     """
     Envía una nueva reseña al backend (Node.js) mediante POST.
@@ -41,6 +41,7 @@ def post_review(data_dict):
     except Exception as e:
         print(f"Network exception occurred: {e}")
         return None
+
 
 def analyze_review_sentiments(text):
     """

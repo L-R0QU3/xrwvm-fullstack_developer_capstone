@@ -17,9 +17,6 @@ from django.contrib.auth import logout
 from .models import CarMake, CarModel
 from .populate import initiate
 from .restapis import get_request, post_review, analyze_review_sentiments
-import json
-# from .populate import initiate
-
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -43,10 +40,12 @@ def login_user(request):
         data = {"userName": username, "status": "Authenticated"}
     return JsonResponse(data)
 
+
 @csrf_exempt
 def logout_user(request):
     logout(request)
     return JsonResponse({"userName": ""})
+
 
 @csrf_exempt
 def registration(request):
@@ -57,12 +56,12 @@ def registration(request):
         first_name = data['firstName']
         last_name = data['lastName']
         email = data['email']
-        
+
         # Verificar si el usuario ya existe
         from django.contrib.auth.models import User
         if User.objects.filter(username=username).exists():
             return JsonResponse({"userName": username, "error": "Already Registered"})
-        
+
         # Crear nuevo usuario
         user = User.objects.create_user(
             username=username,
@@ -76,6 +75,7 @@ def registration(request):
         return JsonResponse({"userName": username, "status": "Authenticated"})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+
 
 def get_cars(request):
     count = CarMake.objects.filter().count()
@@ -105,6 +105,7 @@ def get_dealerships(request, state="All"):
     dealerships = get_request(endpoint)
     return JsonResponse({"status": 200, "dealers": dealerships})
 
+
 def get_dealer_details(request, dealer_id):
     """
     Proxy para /fetchDealer/<dealer_id>
@@ -115,6 +116,7 @@ def get_dealer_details(request, dealer_id):
         return JsonResponse({"status": 200, "dealer": dealership})
     else:
         return JsonResponse({"status": 400, "message": "Bad request"}, status=400)
+
 
 def get_dealer_reviews(request, dealer_id):
     """
@@ -135,6 +137,7 @@ def get_dealer_reviews(request, dealer_id):
     else:
         return JsonResponse({"status": 400, "message": "Bad request"}, status=400)
 
+
 @csrf_exempt
 def add_review(request):
     """
@@ -143,11 +146,11 @@ def add_review(request):
     """
     if not request.user.is_authenticated:
         return JsonResponse({"status": 403, "message": "Unauthorized"}, status=403)
-    
+
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            response = post_review(data)
+            post_review(data)   # ya no se asigna a 'response' (no se usa)
             return JsonResponse({"status": 200, "message": "Review added"})
         except Exception as e:
             return JsonResponse({"status": 500, "message": f"Error: {str(e)}"}, status=500)
