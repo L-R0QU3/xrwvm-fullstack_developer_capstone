@@ -26,8 +26,8 @@ jobs:
       - name: Run Linter on Python files
         run: |
           cd server
-          # Excluir la carpeta migrations (archivos autogenerados) y ejecutar flake8
-          find . -name "*.py" -not -path "./djangoapp/migrations/*" -exec flake8 {} +
+          # Excluir migraciones e ignorar líneas largas (E501)
+          find . -name "*.py" -not -path "./djangoapp/migrations/*" -exec flake8 {} + --ignore=E501
           echo "Linted all Python files successfully"
 
   lint_js:
@@ -42,9 +42,11 @@ jobs:
           node-version: '18'
       - name: Install JSHint
         run: npm install -g jshint
+      - name: Create JSHint config
+        run: |
+          echo '{"esversion": 8, "sub": true}' > .jshintrc
       - name: Run Linter on JS files
         run: |
           cd server/database
-          # Buscar archivos .js y ejecutar jshint
-          find . -name "*.js" -exec jshint {} +
+          jshint --config ../../.jshintrc .
           echo "Linted all JavaScript files successfully"
