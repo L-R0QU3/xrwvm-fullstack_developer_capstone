@@ -26,7 +26,8 @@ jobs:
       - name: Run Linter on Python files
         run: |
           cd server
-          find . -name "*.py" -exec flake8 {} +
+          # Excluir la carpeta migrations (archivos autogenerados) y ejecutar flake8
+          find . -name "*.py" -not -path "./djangoapp/migrations/*" -exec flake8 {} +
           echo "Linted all Python files successfully"
 
   lint_js:
@@ -44,5 +45,6 @@ jobs:
       - name: Run Linter on JS files
         run: |
           cd server/database
-          find . -name "*.py" -not -path "./djangoapp/migrations/*" -exec flake8 {} +
+          # Buscar archivos .js y ejecutar jshint
+          find . -name "*.js" -exec jshint {} +
           echo "Linted all JavaScript files successfully"
